@@ -1,3 +1,3 @@
 # Static Site repo
 
-[Hosting Guide](https://github.com/easypanel-io/rails-sample)
+[Hosting Guide](https://easypanel.io/docs/quickstarts/static-website)
