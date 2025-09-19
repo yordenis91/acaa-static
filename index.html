@@ -1,12 +1,427 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Easypanel Static Sample</title>
-  </head>
-  <body>
-    <h1>Easypanel Static Sample</h1>
-  </body>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cárdenas, A.C. - Abrigando Corazones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A single-page, top-down narrative structure was chosen to guide the user logically from awareness to action. It starts with a Hero section for immediate impact, followed by an 'About Us' to build trust, an interactive 'Our Impact' dashboard to demonstrate value tangibly, a 'How to Help' section for clear calls to action, and finally a Gallery and Contact. This flow is more intuitive for a non-profit's website than a rigid report structure, making it easy for potential donors to understand the mission and see how they can contribute effectively. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Overall community support statistics. Goal: Inform/Impress. Viz: Dynamic number counters. Interaction: Numbers animate on scroll. Justification: Quickly conveys scale and impact. Method: JS Intersection Observer.
+        - Report Info: Types of aid provided. Goal: Compare proportions. Viz: Donut Chart. Interaction: Hover for tooltips with details. Justification: Excellent for showing parts of a whole (aid distribution). Library: Chart.js.
+        - Report Info: Demographics served. Goal: Compare groups. Viz: Bar Chart. Interaction: Hover for tooltips. Justification: Clearly compares distinct categories (children, adults, seniors). Library: Chart.js.
+        - Report Info: How to contribute. Goal: Organize information. Viz: Accordion-style clickable cards. Interaction: Click to expand/collapse. Justification: Keeps the UI clean and allows users to explore only the options relevant to them. Method: HTML/JS.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .stat-card {
+            background-color: white;
+            border: 1px solid #EAEAEA;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+        .cta-button {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #E58A62;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="header" class="bg-[#FDFBF8]/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200/50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-[#D37345]">Cárdenas, A.C.</h1>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#inicio" class="nav-link text-gray-600 hover:text-[#D37345]">Inicio</a>
+                <a href="#quienes-somos" class="nav-link text-gray-600 hover:text-[#D37345]">Quiénes Somos</a>
+                <a href="#nuestro-impacto" class="nav-link text-gray-600 hover:text-[#D37345]">Nuestro Impacto</a>
+                <a href="#como-ayudar" class="nav-link text-gray-600 hover:text-[#D37345]">Cómo Ayudar</a>
+            </nav>
+            <a href="#como-ayudar" class="cta-button bg-[#E58A62] text-white font-bold py-2 px-4 rounded-full shadow-sm hover:bg-[#D37345]">
+                Donar Ahora
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <section id="inicio" class="py-20 md:py-32">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-6xl font-extrabold text-[#3D3D3D] leading-tight">
+                    Abrigando Corazones, <span class="text-[#E58A62]">Transformando Vidas.</span>
+                </h2>
+                <p class="mt-6 text-lg md:text-xl max-w-3xl mx-auto text-gray-600">
+                    Somos una asociación civil sin fines de lucro dedicada a brindar apoyo a los grupos más vulnerables de nuestra comunidad en Cárdenas, Tabasco.
+                </p>
+                <div class="mt-10 flex justify-center gap-4">
+                    <a href="#como-ayudar" class="cta-button bg-[#E58A62] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#D37345]">
+                        Únete a la Causa
+                    </a>
+                    <a href="#quienes-somos" class="cta-button bg-white text-[#E58A62] font-bold py-3 px-8 rounded-full shadow-lg border border-[#E58A62]/50 hover:bg-gray-50">
+                        Saber Más
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="quienes-somos" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-[#3D3D3D]">Nuestra Misión y Valores</h3>
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                        Creemos en un mundo donde todos tienen la oportunidad de vivir con dignidad. Nuestro trabajo se centra en proporcionar alimento, ropa y esperanza a quienes más lo necesitan.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="p-8 rounded-lg">
+                        <div class="text-5xl text-[#E58A62] mb-4">🤝</div>
+                        <h4 class="text-xl font-bold mb-2">Apoyo Comunitario</h4>
+                        <p class="text-gray-600">Operamos una cocina comunitaria y distribuimos despensas para combatir la inseguridad alimentaria en nuestra localidad.</p>
+                    </div>
+                    <div class="p-8 rounded-lg">
+                         <div class="text-5xl text-[#E58A62] mb-4">❤️</div>
+                        <h4 class="text-xl font-bold mb-2">Dignidad y Respeto</h4>
+                        <p class="text-gray-600">Recolectamos y distribuimos ropa en buen estado, asegurando que cada persona reciba ayuda con el máximo respeto y cariño.</p>
+                    </div>
+                    <div class="p-8 rounded-lg">
+                        <div class="text-5xl text-[#E58A62] mb-4">✨</div>
+                        <h4 class="text-xl font-bold mb-2">Esperanza y Futuro</h4>
+                        <p class="text-gray-600">A través de donativos en especie y económicos, creamos un impacto duradero, apoyando a niños, adultos y ancianos por igual.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="nuestro-impacto" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-3xl md:text-4xl font-bold text-[#3D3D3D]">Nuestro Impacto en Cifras</h3>
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                        Cada número representa una vida tocada y una esperanza renovada. Gracias al apoyo de nuestra comunidad, hemos logrado grandes cosas. Explora nuestros datos para ver el alcance de nuestra labor.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 mb-16 text-center">
+                    <div class="stat-card p-6 rounded-lg shadow-md">
+                        <p class="text-4xl font-extrabold text-[#E58A62] stat-number" data-target="8500">0</p>
+                        <p class="text-gray-500 font-medium mt-2">Comidas Servidas al Mes</p>
+                    </div>
+                    <div class="stat-card p-6 rounded-lg shadow-md">
+                        <p class="text-4xl font-extrabold text-[#E58A62] stat-number" data-target="1200">0</p>
+                        <p class="text-gray-500 font-medium mt-2">Familias Apoyadas</p>
+                    </div>
+                    <div class="stat-card p-6 rounded-lg shadow-md">
+                        <p class="text-4xl font-extrabold text-[#E58A62] stat-number" data-target="3000">0</p>
+                        <p class="text-gray-500 font-medium mt-2">Prendas de Ropa Donadas</p>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h4 class="text-xl font-bold text-center mb-4">Distribución de la Ayuda</h4>
+                        <div class="chart-container">
+                            <canvas id="aidDistributionChart"></canvas>
+                        </div>
+                         <p class="text-sm text-gray-500 mt-4 text-center">Proporción de los diferentes tipos de apoyo que brindamos, siendo el alimento nuestra principal área de enfoque.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h4 class="text-xl font-bold text-center mb-4">Comunidad Atendida</h4>
+                        <div class="chart-container">
+                            <canvas id="communityServedChart"></canvas>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-4 text-center">Demografía de las personas que reciben nuestro apoyo, con un enfoque especial en niños y adultos mayores.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="como-ayudar" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-[#3D3D3D]">Formas de Contribuir</h3>
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                        Tu generosidad es el motor de nuestro trabajo. Hay muchas maneras de ayudar y cada contribución, grande o pequeña, marca una gran diferencia.
+                    </p>
+                </div>
+                <div class="max-w-4xl mx-auto">
+                    <div class="help-option-card cursor-pointer bg-gray-50 border border-gray-200 rounded-lg p-6 mb-4 transition-all duration-300">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xl font-bold text-[#D37345]">💰 Donativo Económico</h4>
+                            <span class="text-2xl transform transition-transform duration-300 help-arrow">▼</span>
+                        </div>
+                        <div class="help-content mt-4 text-gray-600 hidden">
+                            <p>Tu aportación monetaria nos permite comprar alimentos frescos, cubrir gastos operativos de la cocina y responder a necesidades urgentes. Puedes donar a través de transferencia bancaria o depósito.</p>
+                            <p class="mt-4 font-semibold">Contacta con nosotros para más detalles.</p>
+                        </div>
+                    </div>
+                     <div class="help-option-card cursor-pointer bg-gray-50 border border-gray-200 rounded-lg p-6 mb-4 transition-all duration-300">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xl font-bold text-[#D37345]">🥫 Donativo en Especie</h4>
+                            <span class="text-2xl transform transition-transform duration-300 help-arrow">▼</span>
+                        </div>
+                        <div class="help-content mt-4 text-gray-600 hidden">
+                            <p>Recibimos alimentos no perecederos, ropa en buen estado, artículos de higiene personal y juguetes. Tu donación en especie llega directamente a las manos de quienes lo necesitan.</p>
+                             <p class="mt-4 font-semibold">Centro de acopio: Calle Ficticia 123, Cárdenas, Tabasco.</p>
+                        </div>
+                    </div>
+                     <div class="help-option-card cursor-pointer bg-gray-50 border border-gray-200 rounded-lg p-6 transition-all duration-300">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xl font-bold text-[#D37345]">🙋‍♀️ Voluntariado</h4>
+                            <span class="text-2xl transform transition-transform duration-300 help-arrow">▼</span>
+                        </div>
+                        <div class="help-content mt-4 text-gray-600 hidden">
+                            <p>Tu tiempo y talento son invaluables. Ayúdanos en la cocina, en la clasificación de donaciones o en la organización de eventos. ¡Cada mano cuenta!</p>
+                            <p class="mt-4 font-semibold">Envíanos un mensaje para conocer las oportunidades de voluntariado.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-[#3D3D3D] text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <h3 class="text-2xl font-bold">Cárdenas, A.C. Abrigando Corazones</h3>
+            <p class="mt-4 max-w-lg mx-auto">
+                Sigamos construyendo una comunidad más fuerte y solidaria. Gracias por tu interés y apoyo.
+            </p>
+            <div class="mt-6">
+                <p><strong>Contacto:</strong> (999) 123-4567</p>
+                <p><strong>Síguenos:</strong> <a href="https://www.facebook.com/cardenasacaa/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[#E58A62]">Facebook</a></p>
+            </div>
+            <p class="text-sm text-gray-400 mt-8">&copy; 2024 Cárdenas, A.C. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const chartFontColor = '#4A4A4A';
+            const primaryColor = '#E58A62';
+            const secondaryColor = '#F2C4B2';
+            const tertiaryColor = '#D37345';
+            const grayColor = '#DDDDDD';
+            
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = chartFontColor;
+
+            const aidCtx = document.getElementById('aidDistributionChart');
+            if (aidCtx) {
+                new Chart(aidCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Alimentos', 'Ropa y Calzado', 'Apoyo Médico', 'Otros'],
+                        datasets: [{
+                            label: 'Distribución de Ayuda',
+                            data: [65, 20, 10, 5],
+                            backgroundColor: [primaryColor, secondaryColor, tertiaryColor, grayColor],
+                            borderColor: '#FDFBF8',
+                            borderWidth: 4,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    boxWidth: 15,
+                                    font: {
+                                        size: 14
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed + '%';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            const communityCtx = document.getElementById('communityServedChart');
+            if (communityCtx) {
+                new Chart(communityCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Niños y Adolescentes', 'Adultos', 'Adultos Mayores'],
+                        datasets: [{
+                            label: 'Personas Atendidas',
+                            data: [45, 30, 25],
+                            backgroundColor: [secondaryColor, primaryColor, tertiaryColor],
+                            borderRadius: 6,
+                            borderWidth: 0,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.x !== null) {
+                                            label += context.parsed.x + '% del total';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                grid: {
+                                    drawOnChartArea: false,
+                                    borderColor: chartFontColor,
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%'
+                                    }
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    display: false
+                                },
+                            }
+                        }
+                    }
+                });
+            }
+
+            const animateStatNumbers = () => {
+                const counters = document.querySelectorAll('.stat-number');
+                const speed = 200;
+
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const counter = entry.target;
+                            const target = +counter.getAttribute('data-target');
+                            const inc = target / speed;
+
+                            const updateCount = () => {
+                                const count = +counter.innerText;
+                                if (count < target) {
+                                    counter.innerText = Math.ceil(count + inc);
+                                    setTimeout(updateCount, 10);
+                                } else {
+                                    counter.innerText = target.toLocaleString('es-MX');
+                                }
+                            };
+                            updateCount();
+                            observer.unobserve(counter);
+                        }
+                    });
+                }, { threshold: 0.5 });
+                
+                counters.forEach(counter => observer.observe(counter));
+            };
+            
+            animateStatNumbers();
+            
+            const helpCards = document.querySelectorAll('.help-option-card');
+            helpCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const content = card.querySelector('.help-content');
+                    const arrow = card.querySelector('.help-arrow');
+                    
+                    card.classList.toggle('bg-white');
+                    content.classList.toggle('hidden');
+                    arrow.classList.toggle('rotate-180');
+                });
+            });
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            const onScroll = () => {
+                let currentSection = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${currentSection}`) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+
+            window.addEventListener('scroll', onScroll);
+        });
+    </script>
+</body>
 </html>
