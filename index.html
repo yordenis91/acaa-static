@@ -1,426 +1,741 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cárdenas, A.C. - Abrigando Corazones</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Neutrals -->
-    <!-- Application Structure Plan: A single-page, top-down narrative structure was chosen to guide the user logically from awareness to action. It starts with a Hero section for immediate impact, followed by an 'About Us' to build trust, an interactive 'Our Impact' dashboard to demonstrate value tangibly, a 'How to Help' section for clear calls to action, and finally a Gallery and Contact. This flow is more intuitive for a non-profit's website than a rigid report structure, making it easy for potential donors to understand the mission and see how they can contribute effectively. -->
-    <!-- Visualization & Content Choices: 
-        - Report Info: Overall community support statistics. Goal: Inform/Impress. Viz: Dynamic number counters. Interaction: Numbers animate on scroll. Justification: Quickly conveys scale and impact. Method: JS Intersection Observer.
-        - Report Info: Types of aid provided. Goal: Compare proportions. Viz: Donut Chart. Interaction: Hover for tooltips with details. Justification: Excellent for showing parts of a whole (aid distribution). Library: Chart.js.
-        - Report Info: Demographics served. Goal: Compare groups. Viz: Bar Chart. Interaction: Hover for tooltips. Justification: Clearly compares distinct categories (children, adults, seniors). Library: Chart.js.
-        - Report Info: How to contribute. Goal: Organize information. Viz: Accordion-style clickable cards. Interaction: Click to expand/collapse. Justification: Keeps the UI clean and allows users to explore only the options relevant to them. Method: HTML/JS.
-        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <title>ACAA Cárdenas - Asociación Cubana de Artesanos Artistas</title>
     <style>
+        /* Variables de colores y estilos */
+        :root {
+            --color-primary: #8B4513; /* Marrón oscuro - artesanía */
+            --color-secondary: #D2691E; /* Marrón chocolate */
+            --color-accent: #CD853F; /* Peru - acento */
+            --color-light: #F5F5DC; /* Beige claro */
+            --color-dark: #333; /* Texto oscuro */
+            --color-white: #FFF; /* Blanco */
+            --font-heading: 'Playfair Display', Georgia, serif;
+            --font-body: 'Open Sans', Arial, sans-serif;
+            --spacing: 1rem;
+            --border-radius: 4px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #FDFBF8;
-            color: #4A4A4A;
+            font-family: var(--font-body);
+            color: var(--color-dark);
+            line-height: 1.6;
+            background-color: var(--color-light);
         }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            margin-bottom: var(--spacing);
+            color: var(--color-primary);
         }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
+        
+        p {
+            margin-bottom: var(--spacing);
         }
-        .stat-card {
-            background-color: white;
-            border: 1px solid #EAEAEA;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-        }
-        .cta-button {
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        .cta-button:hover {
-            transform: translateY(-2px);
-        }
-        .nav-link {
-            position: relative;
+        
+        a {
+            color: var(--color-secondary);
+            text-decoration: none;
             transition: color 0.3s ease;
         }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #E58A62;
-            transition: width 0.3s ease;
+        
+        a:hover {
+            color: var(--color-primary);
         }
-        .nav-link:hover::after, .nav-link.active::after {
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--color-secondary);
+            color: var(--color-white);
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+        
+        .section {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background-color: var(--color-accent);
+            margin: 0.5rem auto;
+        }
+        
+        /* Header y Navegación */
+        header {
+            background-color: var(--color-white);
+            box-shadow: var(--box-shadow);
+            position: fixed;
             width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 60px;
+            margin-right: 1rem;
+        }
+        
+        .logo-text {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--color-primary);
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-menu li {
+            margin-left: 2rem;
+        }
+        
+        .nav-menu a {
+            font-weight: 600;
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1518998053901-5348d3961a04?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            color: var(--color-white);
+            text-align: center;
+            margin-top: 80px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-white);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .about-image {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Events Section */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .event-card {
+            background-color: var(--color-white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .event-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .event-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .event-card:hover .event-image img {
+            transform: scale(1.05);
+        }
+        
+        .event-content {
+            padding: 1.5rem;
+        }
+        
+        .event-date {
+            color: var(--color-secondary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Leadership Section */
+        .leadership {
+            background-color: var(--color-white);
+        }
+        
+        .leader-profile {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .leader-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            border: 5px solid var(--color-light);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .leader-quote {
+            font-style: italic;
+            margin: 1.5rem 0;
+            padding: 0 2rem;
+            position: relative;
+        }
+        
+        .leader-quote:before, .leader-quote:after {
+            content: '"';
+            font-size: 2rem;
+            color: var(--color-accent);
+            position: absolute;
+        }
+        
+        .leader-quote:before {
+            left: 0;
+            top: -10px;
+        }
+        
+        .leader-quote:after {
+            right: 0;
+            bottom: -20px;
+        }
+        
+        /* Gallery Section */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .gallery-item {
+            height: 250px;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--color-white);
+            padding: 0.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+        
+        /* Contact Section */
+        .contact {
+            background-color: var(--color-white);
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+        
+        .contact-info {
+            margin-bottom: 2rem;
+        }
+        
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-family: var(--font-body);
+        }
+        
+        .contact-form textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .map-container {
+            height: 300px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            padding: 3rem 0;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-logo {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--color-white);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: var(--color-white);
+            font-size: 1.5rem;
+        }
+        
+        .footer-links h4 {
+            color: var(--color-white);
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--color-light);
+        }
+        
+        .footer-links a:hover {
+            color: var(--color-white);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .about-content,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                flex-direction: column;
+                background-color: var(--color-white);
+                width: 80%;
+                height: calc(100vh - 80px);
+                transition: right 0.3s ease;
+                box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
+                padding: 2rem;
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .nav-menu li {
+                margin: 1rem 0;
+            }
+            
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="antialiased">
-
-    <header id="header" class="bg-[#FDFBF8]/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200/50">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-[#D37345]">Cárdenas, A.C.</h1>
-            <nav class="hidden md:flex space-x-8">
-                <a href="#inicio" class="nav-link text-gray-600 hover:text-[#D37345]">Inicio</a>
-                <a href="#quienes-somos" class="nav-link text-gray-600 hover:text-[#D37345]">Quiénes Somos</a>
-                <a href="#nuestro-impacto" class="nav-link text-gray-600 hover:text-[#D37345]">Nuestro Impacto</a>
-                <a href="#como-ayudar" class="nav-link text-gray-600 hover:text-[#D37345]">Cómo Ayudar</a>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgZmlsbD0iIzhCNDUxMyIvPjxwYXRoIGQ9Ik0zMCAzMEg3MFY3MEgzMHoiIGZpbGw9IiNGNUY1QkQiLz48cGF0aCBkPSJNNDAgNDBINjBWNjBINDBaIiBmaWxsPSIjQ0Q4NTNGIi8+PHRleHQgeD0iNTAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM4QjQ1MTMiPkFDQUE8L3RleHQ+PC9zdmc+" alt="Logo ACAA Cárdenas">
+                <span class="logo-text">ACAA Cárdenas</span>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="#eventos">Eventos</a></li>
+                    <li><a href="#liderazgo">Liderazgo</a></li>
+                    <li><a href="#galeria">Galería</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
             </nav>
-            <a href="#como-ayudar" class="cta-button bg-[#E58A62] text-white font-bold py-2 px-4 rounded-full shadow-sm hover:bg-[#D37345]">
-                Donar Ahora
-            </a>
         </div>
     </header>
 
-    <main>
-        <section id="inicio" class="py-20 md:py-32">
-            <div class="container mx-auto px-6 text-center">
-                <h2 class="text-4xl md:text-6xl font-extrabold text-[#3D3D3D] leading-tight">
-                    Abrigando Corazones, <span class="text-[#E58A62]">Transformando Vidas.</span>
-                </h2>
-                <p class="mt-6 text-lg md:text-xl max-w-3xl mx-auto text-gray-600">
-                    Somos una asociación civil sin fines de lucro dedicada a brindar apoyo a los grupos más vulnerables de nuestra comunidad en Cárdenas, Tabasco.
-                </p>
-                <div class="mt-10 flex justify-center gap-4">
-                    <a href="#como-ayudar" class="cta-button bg-[#E58A62] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#D37345]">
-                        Únete a la Causa
-                    </a>
-                    <a href="#quienes-somos" class="cta-button bg-white text-[#E58A62] font-bold py-3 px-8 rounded-full shadow-lg border border-[#E58A62]/50 hover:bg-gray-50">
-                        Saber Más
-                    </a>
+    <!-- Hero Section -->
+    <section id="inicio" class="hero">
+        <div class="container hero-content">
+            <h1 class="hero-title">Asociación Cubana de Artesanos Artistas</h1>
+            <p class="hero-subtitle">Promoviendo el arte, la cultura y la artesanía en Cárdenas desde 1981</p>
+            <a href="#eventos" class="btn">Próximos Eventos</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="nosotros" class="section">
+        <div class="container">
+            <h2 class="section-title">Sobre Nosotros</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>La Asociación Cubana de Artesanos Artistas (ACAA) en Cárdenas se distingue como una institución cultural de notable resiliencia e influencia, trascendiendo el papel de una simple galería de arte para funcionar como un eje socio-cultural dinámico en la provincia de Matanzas.</p>
+                    <p>Fundada el 1 de julio de 1981, bajo la Resolución Nº 111 del Ministerio de Cultura, nuestra asociación ha mantenido un compromiso inquebrantable con la promoción del arte y la artesanía local, fomentando el talento artístico y preservando el patrimonio cultural de la "Ciudad de las Primicias".</p>
+                    <p>Nuestra sede en Cárdenas no es simplemente una galería, sino un espacio multifuncional que alberga salones de artes plásticas y fotografía, pasarelas de moda y talleres de creación, consolidándose como uno de los principales espacios para el desarrollo del arte en la región.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Taller de arte en ACAA Cárdenas">
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="quienes-somos" class="py-20 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h3 class="text-3xl md:text-4xl font-bold text-[#3D3D3D]">Nuestra Misión y Valores</h3>
-                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-                        Creemos en un mundo donde todos tienen la oportunidad de vivir con dignidad. Nuestro trabajo se centra en proporcionar alimento, ropa y esperanza a quienes más lo necesitan.
-                    </p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-8 text-center">
-                    <div class="p-8 rounded-lg">
-                        <div class="text-5xl text-[#E58A62] mb-4">🤝</div>
-                        <h4 class="text-xl font-bold mb-2">Apoyo Comunitario</h4>
-                        <p class="text-gray-600">Operamos una cocina comunitaria y distribuimos despensas para combatir la inseguridad alimentaria en nuestra localidad.</p>
+    <!-- Events Section -->
+    <section id="eventos" class="section" style="background-color: #f9f9f9;">
+        <div class="container">
+            <h2 class="section-title">Nuestros Eventos</h2>
+            <div class="events-grid">
+                <div class="event-card">
+                    <div class="event-image">
+                        <img src="https://images.unsplash.com/photo-1519791883288-dc8bd696e667?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Salón Embotellarte">
                     </div>
-                    <div class="p-8 rounded-lg">
-                         <div class="text-5xl text-[#E58A62] mb-4">❤️</div>
-                        <h4 class="text-xl font-bold mb-2">Dignidad y Respeto</h4>
-                        <p class="text-gray-600">Recolectamos y distribuimos ropa en buen estado, asegurando que cada persona reciba ayuda con el máximo respeto y cariño.</p>
-                    </div>
-                    <div class="p-8 rounded-lg">
-                        <div class="text-5xl text-[#E58A62] mb-4">✨</div>
-                        <h4 class="text-xl font-bold mb-2">Esperanza y Futuro</h4>
-                        <p class="text-gray-600">A través de donativos en especie y económicos, creamos un impacto duradero, apoyando a niños, adultos y ancianos por igual.</p>
+                    <div class="event-content">
+                        <div class="event-date">Marzo 2024</div>
+                        <h3>Salón Embotellarte</h3>
+                        <p>Evento anual donde las obras deben crearse a partir del uso de botellas, promoviendo el reciclaje y la reutilización creativa.</p>
+                        <a href="#" class="btn">Más información</a>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <section id="nuestro-impacto" class="py-20">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h3 class="text-3xl md:text-4xl font-bold text-[#3D3D3D]">Nuestro Impacto en Cifras</h3>
-                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-                        Cada número representa una vida tocada y una esperanza renovada. Gracias al apoyo de nuestra comunidad, hemos logrado grandes cosas. Explora nuestros datos para ver el alcance de nuestra labor.
-                    </p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-8 mb-16 text-center">
-                    <div class="stat-card p-6 rounded-lg shadow-md">
-                        <p class="text-4xl font-extrabold text-[#E58A62] stat-number" data-target="8500">0</p>
-                        <p class="text-gray-500 font-medium mt-2">Comidas Servidas al Mes</p>
+                
+                <div class="event-card">
+                    <div class="event-image">
+                        <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Afroferia">
                     </div>
-                    <div class="stat-card p-6 rounded-lg shadow-md">
-                        <p class="text-4xl font-extrabold text-[#E58A62] stat-number" data-target="1200">0</p>
-                        <p class="text-gray-500 font-medium mt-2">Familias Apoyadas</p>
-                    </div>
-                    <div class="stat-card p-6 rounded-lg shadow-md">
-                        <p class="text-4xl font-extrabold text-[#E58A62] stat-number" data-target="3000">0</p>
-                        <p class="text-gray-500 font-medium mt-2">Prendas de Ropa Donadas</p>
+                    <div class="event-content">
+                        <div class="event-date">Noviembre 2024</div>
+                        <h3>Afroferia</h3>
+                        <p>Celebración de las tradiciones, el arte y las raíces africanas con exposiciones, pasarelas de moda y colaboraciones comunitarias.</p>
+                        <a href="#" class="btn">Más información</a>
                     </div>
                 </div>
-
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="bg-white p-8 rounded-lg shadow-lg">
-                        <h4 class="text-xl font-bold text-center mb-4">Distribución de la Ayuda</h4>
-                        <div class="chart-container">
-                            <canvas id="aidDistributionChart"></canvas>
-                        </div>
-                         <p class="text-sm text-gray-500 mt-4 text-center">Proporción de los diferentes tipos de apoyo que brindamos, siendo el alimento nuestra principal área de enfoque.</p>
+                
+                <div class="event-card">
+                    <div class="event-image">
+                        <img src="https://images.unsplash.com/photo-1495763388011-90f5a4f8b5c1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Salón de Fotografía">
                     </div>
-                    <div class="bg-white p-8 rounded-lg shadow-lg">
-                        <h4 class="text-xl font-bold text-center mb-4">Comunidad Atendida</h4>
-                        <div class="chart-container">
-                            <canvas id="communityServedChart"></canvas>
-                        </div>
-                        <p class="text-sm text-gray-500 mt-4 text-center">Demografía de las personas que reciben nuestro apoyo, con un enfoque especial en niños y adultos mayores.</p>
+                    <div class="event-content">
+                        <div class="event-date">Junio 2024</div>
+                        <h3>Cuba al Natural</h3>
+                        <p>Salón de fotografía que conmemora el Día Mundial del Medio Ambiente, visibilizando la belleza natural de Cuba.</p>
+                        <a href="#" class="btn">Más información</a>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="como-ayudar" class="py-20 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h3 class="text-3xl md:text-4xl font-bold text-[#3D3D3D]">Formas de Contribuir</h3>
-                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-                        Tu generosidad es el motor de nuestro trabajo. Hay muchas maneras de ayudar y cada contribución, grande o pequeña, marca una gran diferencia.
-                    </p>
+    <!-- Leadership Section -->
+    <section id="liderazgo" class="section leadership">
+        <div class="container">
+            <h2 class="section-title">Nuestro Liderazgo</h2>
+            <div class="leader-profile">
+                <img src="https://images.unsplash.com/photo-1580309237429-661ea7cd1d53?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Lázaro Mauricio González Artiles" class="leader-image">
+                <h3>Lázaro Mauricio González Artiles</h3>
+                <p class="title">Fundador y Presidente</p>
+                <p class="leader-quote">"No planeo el descanso, planifico el trabajo. Cada día es una oportunidad para crear y fortalecer nuestra comunidad artística."</p>
+                <p>Reconocido artesano artista y motor impulsor de la ACAA Cárdenas desde 2006. Su visión y dedicación han sido fundamentales para el crecimiento y la resiliencia de nuestra institución, permitiéndonos adaptarnos a los desafíos y mantener una programación cultural diversa e innovadora.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="galeria" class="section">
+        <div class="container">
+            <h2 class="section-title">Galería</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Exposición de arte">
+                    <div class="gallery-caption">Exposición Colectiva 2023</div>
                 </div>
-                <div class="max-w-4xl mx-auto">
-                    <div class="help-option-card cursor-pointer bg-gray-50 border border-gray-200 rounded-lg p-6 mb-4 transition-all duration-300">
-                        <div class="flex justify-between items-center">
-                            <h4 class="text-xl font-bold text-[#D37345]">💰 Donativo Económico</h4>
-                            <span class="text-2xl transform transition-transform duration-300 help-arrow">▼</span>
-                        </div>
-                        <div class="help-content mt-4 text-gray-600 hidden">
-                            <p>Tu aportación monetaria nos permite comprar alimentos frescos, cubrir gastos operativos de la cocina y responder a necesidades urgentes. Puedes donar a través de transferencia bancaria o depósito.</p>
-                            <p class="mt-4 font-semibold">Contacta con nosotros para más detalles.</p>
-                        </div>
-                    </div>
-                     <div class="help-option-card cursor-pointer bg-gray-50 border border-gray-200 rounded-lg p-6 mb-4 transition-all duration-300">
-                        <div class="flex justify-between items-center">
-                            <h4 class="text-xl font-bold text-[#D37345]">🥫 Donativo en Especie</h4>
-                            <span class="text-2xl transform transition-transform duration-300 help-arrow">▼</span>
-                        </div>
-                        <div class="help-content mt-4 text-gray-600 hidden">
-                            <p>Recibimos alimentos no perecederos, ropa en buen estado, artículos de higiene personal y juguetes. Tu donación en especie llega directamente a las manos de quienes lo necesitan.</p>
-                             <p class="mt-4 font-semibold">Centro de acopio: Calle Ficticia 123, Cárdenas, Tabasco.</p>
-                        </div>
-                    </div>
-                     <div class="help-option-card cursor-pointer bg-gray-50 border border-gray-200 rounded-lg p-6 transition-all duration-300">
-                        <div class="flex justify-between items-center">
-                            <h4 class="text-xl font-bold text-[#D37345]">🙋‍♀️ Voluntariado</h4>
-                            <span class="text-2xl transform transition-transform duration-300 help-arrow">▼</span>
-                        </div>
-                        <div class="help-content mt-4 text-gray-600 hidden">
-                            <p>Tu tiempo y talento son invaluables. Ayúdanos en la cocina, en la clasificación de donaciones o en la organización de eventos. ¡Cada mano cuenta!</p>
-                            <p class="mt-4 font-semibold">Envíanos un mensaje para conocer las oportunidades de voluntariado.</p>
-                        </div>
-                    </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Taller de artesanía">
+                    <div class="gallery-caption">Taller de Artesanía</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Obras de Embotellarte">
+                    <div class="gallery-caption">Obras del Salón Embotellarte</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Evento cultural">
+                    <div class="gallery-caption">Afroferia 2023</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Fotografía naturaleza">
+                    <div class="gallery-caption">Cuba al Natural</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Proyecto Jinete Azul">
+                    <div class="gallery-caption">Proyecto Jinete Azul</div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
-    <footer class="bg-[#3D3D3D] text-white py-12">
-        <div class="container mx-auto px-6 text-center">
-            <h3 class="text-2xl font-bold">Cárdenas, A.C. Abrigando Corazones</h3>
-            <p class="mt-4 max-w-lg mx-auto">
-                Sigamos construyendo una comunidad más fuerte y solidaria. Gracias por tu interés y apoyo.
-            </p>
-            <div class="mt-6">
-                <p><strong>Contacto:</strong> (999) 123-4567</p>
-                <p><strong>Síguenos:</strong> <a href="https://www.facebook.com/cardenasacaa/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[#E58A62]">Facebook</a></p>
+    <!-- Contact Section -->
+    <section id="contacto" class="section contact">
+        <div class="container">
+            <h2 class="section-title">Contacto</h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Información de Contacto</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>Dirección:</strong> Casa Sede de los Artesanos Artistas, Cárdenas, Matanzas, Cuba</p>
+                    <p><i class="fas fa-phone"></i> <strong>Teléfono:</strong> +53 123 456 789</p>
+                    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> info@acaacardenas.org</p>
+                    
+                    <h3>Horario de Atención</h3>
+                    <p>Lunes a Viernes: 9:00 AM - 5:00 PM</p>
+                    <p>Sábados: 10:00 AM - 2:00 PM</p>
+                    <p>Domingos: Cerrado</p>
+                </div>
+                
+                <div class="contact-form">
+                    <h3>Envíanos un Mensaje</h3>
+                    <form>
+                        <input type="text" placeholder="Nombre completo" required>
+                        <input type="email" placeholder="Correo electrónico" required>
+                        <input type="text" placeholder="Asunto">
+                        <textarea placeholder="Tu mensaje" required></textarea>
+                        <button type="submit" class="btn">Enviar Mensaje</button>
+                    </form>
+                </div>
             </div>
-            <p class="text-sm text-gray-400 mt-8">&copy; 2024 Cárdenas, A.C. Todos los derechos reservados.</p>
+            
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3732.415899050356!2d-81.2057259246867!3d23.042831878933348!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d5bb6d3b3b4b3b%3A0x8c0670787c2c5b3b!2sC%C3%A1rdenas%2C%20Matanzas%2C%20Cuba!5e0!3m2!1ses!2sus!4v1645567890123!5m2!1ses!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <div class="footer-logo">ACAA Cárdenas</div>
+                    <p>Asociación Cubana de Artesanos Artistas - Filial Cárdenas. Promoviendo el arte y la cultura desde 1981.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#nosotros">Nosotros</a></li>
+                        <li><a href="#eventos">Eventos</a></li>
+                        <li><a href="#galeria">Galería</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Eventos Destacados</h4>
+                    <ul>
+                        <li><a href="#">Salón Embotellarte</a></li>
+                        <li><a href="#">Afroferia</a></li>
+                        <li><a href="#">Cuba al Natural</a></li>
+                        <li><a href="#">Proyecto Jinete Azul</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Recursos</h4>
+                    <ul>
+                        <li><a href="#">Convocatorias</a></li>
+                        <li><a href="#">Talleres</a></li>
+                        <li><a href="#">Voluntariado</a></li>
+                        <li><a href="#">Donaciones</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 ACAA Cárdenas - Asociación Cubana de Artesanos Artistas. Todos los derechos reservados.</p>
+            </div>
         </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-
-            const chartFontColor = '#4A4A4A';
-            const primaryColor = '#E58A62';
-            const secondaryColor = '#F2C4B2';
-            const tertiaryColor = '#D37345';
-            const grayColor = '#DDDDDD';
+        // JavaScript para el menú móvil
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
             
-            Chart.defaults.font.family = "'Inter', sans-serif";
-            Chart.defaults.color = chartFontColor;
-
-            const aidCtx = document.getElementById('aidDistributionChart');
-            if (aidCtx) {
-                new Chart(aidCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Alimentos', 'Ropa y Calzado', 'Apoyo Médico', 'Otros'],
-                        datasets: [{
-                            label: 'Distribución de Ayuda',
-                            data: [65, 20, 10, 5],
-                            backgroundColor: [primaryColor, secondaryColor, tertiaryColor, grayColor],
-                            borderColor: '#FDFBF8',
-                            borderWidth: 4,
-                            hoverOffset: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    padding: 20,
-                                    boxWidth: 15,
-                                    font: {
-                                        size: 14
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed !== null) {
-                                            label += context.parsed + '%';
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            const communityCtx = document.getElementById('communityServedChart');
-            if (communityCtx) {
-                new Chart(communityCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Niños y Adolescentes', 'Adultos', 'Adultos Mayores'],
-                        datasets: [{
-                            label: 'Personas Atendidas',
-                            data: [45, 30, 25],
-                            backgroundColor: [secondaryColor, primaryColor, tertiaryColor],
-                            borderRadius: 6,
-                            borderWidth: 0,
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        indexAxis: 'y',
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed.x !== null) {
-                                            label += context.parsed.x + '% del total';
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                beginAtZero: true,
-                                grid: {
-                                    drawOnChartArea: false,
-                                    borderColor: chartFontColor,
-                                },
-                                ticks: {
-                                    callback: function(value) {
-                                        return value + '%'
-                                    }
-                                }
-                            },
-                            y: {
-                                grid: {
-                                    display: false
-                                },
-                            }
-                        }
-                    }
-                });
-            }
-
-            const animateStatNumbers = () => {
-                const counters = document.querySelectorAll('.stat-number');
-                const speed = 200;
-
-                const observer = new IntersectionObserver(entries => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const counter = entry.target;
-                            const target = +counter.getAttribute('data-target');
-                            const inc = target / speed;
-
-                            const updateCount = () => {
-                                const count = +counter.innerText;
-                                if (count < target) {
-                                    counter.innerText = Math.ceil(count + inc);
-                                    setTimeout(updateCount, 10);
-                                } else {
-                                    counter.innerText = target.toLocaleString('es-MX');
-                                }
-                            };
-                            updateCount();
-                            observer.unobserve(counter);
-                        }
-                    });
-                }, { threshold: 0.5 });
-                
-                counters.forEach(counter => observer.observe(counter));
-            };
+            hamburger.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
             
-            animateStatNumbers();
-            
-            const helpCards = document.querySelectorAll('.help-option-card');
-            helpCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    const content = card.querySelector('.help-content');
-                    const arrow = card.querySelector('.help-arrow');
-                    
-                    card.classList.toggle('bg-white');
-                    content.classList.toggle('hidden');
-                    arrow.classList.toggle('rotate-180');
+            // Cerrar menú al hacer clic en un enlace
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('active');
                 });
             });
             
-            const navLinks = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('section');
-
-            const onScroll = () => {
-                let currentSection = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    if (pageYOffset >= sectionTop - 100) {
-                        currentSection = section.getAttribute('id');
+            // Smooth scrolling para enlaces de anclaje
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
                     }
                 });
-
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${currentSection}`) {
-                        link.classList.add('active');
-                    }
-                });
-            };
-
-            window.addEventListener('scroll', onScroll);
+            });
         });
     </script>
 </body>
